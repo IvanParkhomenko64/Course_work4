@@ -1,7 +1,24 @@
-# This is a sample Python script.
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+
+def main():
+    vacancies_json = []
+    keyword = input('Введите ключевое слово для поиска: ')
+
+
+    hh = HeadHunter(keyword)
+    sj = SuperJob(keyword)
+
+    for api in (hh, sj):
+        api.get_vacancies(pages_count=1)
+        vacancies_json.extend(api_get_formatted_vacancies())
+
+    connector = Connector(keyword=keyword, vacancies_json=vacancies_json)
+
+    while True:
+        command = input(
+            "1 - Вывести список вакансий; \n"
+            "exit - Выход.\n"
+        )
 
 
 def print_hi(name):
