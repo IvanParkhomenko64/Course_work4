@@ -27,10 +27,18 @@ class Vacancy:
             return True
         elif not self.salary_min:
             return False
+        return self.salary_min >= other.salary_min
+
+    def __str__(self):
+        salary_from = f'От {self.salary_from}' if self.salary_from else ''
+        salary_to = f'До {self.salary_to}' if self.salary_to else ''
+        if self.salary_from is None and self.salary_to is None:
+            salary_from = 'Не указана'
+        return f'Вакансия: \"{self.title}\" \nКомпания: \"{self.employer}\" \nЗарплата: \"{salary_from} {salary_to}\" \nURL: \"{self.url}\" \n'
 
 
 class Connector:
-    def __int__(self, keyword, vacancies_json):
+    def __init__(self, keyword, vacancies_json):
         self.__filename = f"{keyword.title()}.json"
         self.insert(vacancies_json)
 
@@ -93,6 +101,7 @@ class HeadHunter(Engine):
                 break
             print(f"Найдено ({len(values)}) вакансий.")
             self.__vacancies.extend(values)
+            pprint(self.__vacancies[0])
             self.__params['page'] += 1
 
     def get_formatted_vacancies(self):
