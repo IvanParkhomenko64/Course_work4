@@ -14,6 +14,10 @@ class Vacancy:
     __slots__ = ('id', 'title', 'url', 'salary_from', 'salary_to', 'employer', 'api')
 
     def __init__(self, vacancy_id, title, url, salary_from, salary_to, employer, api):
+        # if not isinstance(salary_from, int):
+        #     raise AttributeError
+        # elif not isinstance(salary_to, int):
+        #     raise AttributeError
         self.id = vacancy_id
         self.title = title
         self.url = url
@@ -23,18 +27,18 @@ class Vacancy:
         self.api = api
 
     def __gt__(self, other):
-        if not other.salary_min:
+        if not other.salary_from:
             return True
-        elif not self.salary_min:
+        elif not self.salary_from:
             return False
-        return self.salary_min >= other.salary_min
+        return self.salary_from >= other.salary_from
 
     def __str__(self):
         salary_from = f'От {self.salary_from}' if self.salary_from else ''
-        salary_to = f'До {self.salary_to}' if self.salary_to else ''
+        salary_to = f' До {self.salary_to}' if self.salary_to else ''
         if self.salary_from is None and self.salary_to is None:
             salary_from = 'Не указана'
-        return f'Вакансия: \"{self.title}\" \nКомпания: \"{self.employer}\" \nЗарплата: \"{salary_from} {salary_to}\" \nURL: \"{self.url}\" \n'
+        return f'Вакансия: \"{self.title}\" \nКомпания: \"{self.employer}\" \nЗарплата: \"{salary_from}{salary_to}\" \nURL: \"{self.url}\" \n'
 
 
 class Connector:
@@ -50,8 +54,22 @@ class Connector:
         # vacancies = []
         with open(self.__filename, 'r', encoding='utf-8') as file:
             data = json.load(file)
-        vacancies = [Vacancy(x['id'], x['title'], x['salary_from'], x['salary_to'], x['employer'], x['api']) for x in
-                     data]
+        vacancies = [Vacancy(x['id'], x['title'], x['url'], x['salary_from'], x['salary_to'], x['employer'], x['api']) for x in data]
+        return vacancies
+
+    def sort_vacancies_by_salary_from_desk(self):
+        vacancies = self.select()
+        vacancies = sorted(vacancies, reverse=True)
+        return vacancies
+
+    def sort_vacancies_by_salary_from_asc(self):
+        vacancies = self.select()
+        vacancies = sorted(vacancies)
+        return vacancies
+
+    def sort_vacancies_by_salary_to_asc(self):
+        vacancies = self.select()
+        vacancies = sorted(vacancies, key=lambda x: x.salary_to if x.salary_to else 0)
         return vacancies
 
 
@@ -101,7 +119,6 @@ class HeadHunter(Engine):
                 break
             print(f"Найдено ({len(values)}) вакансий.")
             self.__vacancies.extend(values)
-            pprint(self.__vacancies[0])
             self.__params['page'] += 1
 
     def get_formatted_vacancies(self):
@@ -158,7 +175,6 @@ class SuperJob(Engine):
     def get_formatted_vacancies(self):
         formatted_vacancies = []
         for vacancy in self.__vacancies:
-            salary_from, salary_to = self.get_salary(vacancy['salary'])
             formatted_vacancies.append({
                 'id': vacancy['id'],
                 'title': vacancy['profession'],
