@@ -1,4 +1,5 @@
 class Vacancy:
+    """Класс для работы с Вакансиями, приведенные к единому виду с различных платформ"""
     __slots__ = ('id', 'title', 'url', 'salary_from', 'salary_to', 'employer', 'api')
 
     def __init__(self, vacancy_id, title, url, salary_from, salary_to, employer, api):

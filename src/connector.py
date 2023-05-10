@@ -3,6 +3,7 @@ from src.vacancy import Vacancy
 
 
 class Connector:
+    """Класс для чтения и записи данных в файлы .json"""
     def __init__(self, keyword, vacancies_json):
         self.__filename = f"{keyword.title()}.json"
         self.insert(vacancies_json)

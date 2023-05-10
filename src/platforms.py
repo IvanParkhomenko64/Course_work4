@@ -5,6 +5,7 @@ from src.parsingerror import ParsingError
 
 
 class Engine(ABC):
+    """Абстрактный класс для классов получения данных с сайтов о вакансиях"""
     @abstractmethod
     def get_request(self):
         pass
@@ -15,6 +16,7 @@ class Engine(ABC):
 
 
 class HeadHunter(Engine):
+    """Класс для получения данных о вакансиях с сайта HeadHunter"""
     def __init__(self, keyword):
         self.__header = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0"}
@@ -69,6 +71,7 @@ class HeadHunter(Engine):
 
 
 class SuperJob(Engine):
+    """Класс для получения данных о вакансиях с сайта SuperJob"""
     def __init__(self, keyword):
         self.__header = {"X-Api-App-Id": os.getenv("SJ_API_KEY")}
         self.__params = {
