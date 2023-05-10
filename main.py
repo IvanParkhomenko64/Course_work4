@@ -1,6 +1,7 @@
 from pprint import pprint
 
-from classes import HeadHunter, SuperJob, Connector
+from src.platforms import HeadHunter, SuperJob
+from src.connector import Connector
 
 
 def main():
